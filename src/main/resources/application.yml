@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: all-server
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+server:
+    port: 8888
+    host: localhost
+eureka:
+    client:
+        # 不向注册中心注册自己
+        register-with-eureka: false
+        # 不需要检索服务
+        fetch-registry: false
+        serviceUrl:
+            defaultZone: http://${server.host}:${server.port}/eureka/
+zuul:
+    eureka:
+        shopping:
+            semaphore:
+                maxSemaphores: 128
+    ribbon:
+        eager-load:
+            enabled: true
+    host:
+        socket-timeout-millis: 60000
+        connect-timeout-millis: 60000
+    routes:
+        shopping:
+            url: http://edu.ccmmxj.club:8003
+            path: /shopping/**
+            serviceId: shopping
+    strip-prefix: false
+hystrix:
+    command:
+        default:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 60000
+ribbon:
+    eureka:
+        enable: true
+    ReadTimeout: 60000
+    ConnectTimeout: 60000
+    okhttp:
+        enabled: true
